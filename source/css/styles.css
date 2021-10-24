@@ -1,0 +1,102 @@
+body {
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-color: #BFD7E3;
+}
+
+.timer {
+  padding: 20px;
+  width: 800px;
+}
+
+.timer_change-mode-wrapper {
+  display: flex;
+  justify-content: center;
+  padding: 100px;
+}
+
+.timer_change-mode {
+  width: 60px;
+  height: 30px;
+  background-color: #e5e5e5;
+  border: 1px solid #cccccc;
+  border-radius: 30px;
+  display: flex;
+  align-items: center;
+  position: relative;
+  margin-left: auto;
+  margin-right: auto;
+  transition-property: justify-content;
+  transition-duration: 1s;
+}
+
+.change-mode_point {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  border: 1px solid #cccccc;
+}
+
+.change-mode_point--time {
+  background-color: #D6FFEF;
+}
+
+.change-mode_point--stopwatch {
+  background-color: #FFB1C3;
+}
+
+.timer_content {
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  font-family: Arial;
+  margin-bottom: 50px;
+}
+
+.content_time {
+  font-size: 50px;
+}
+
+.content_millisecs {
+  margin-bottom: 9px;
+  margin-left: 20px;
+}
+
+.timer_setTime {
+  height: 100px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  overflow: scroll;
+  font-size: 10px;
+  font-family: Arial;
+}
+
+.button {
+  width: 200px;
+  height: 50px;
+  background-color: #DEDEFA;
+  border: 1px solid #E0AEF5;
+  border-radius: 30px;
+}
+
+.button:disabled {
+  background-color: #e5e5e5;
+}
+
+.blocks-wrapper {
+  display: flex;
+  flex-direction: column;
+}
+
+.button-wrapper {
+  display: flex;
+  justify-content: center;
+  gap: 30px;
+  padding: 50px;
+}
