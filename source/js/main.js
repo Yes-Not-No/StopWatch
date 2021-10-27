@@ -15,59 +15,119 @@ const startButton = document.querySelector(".timer_startButton"),
       changeModePoint = document.querySelector(".change-mode_point");
 
 // Аудио
-const audio = new Audio("audio/mixkit-mouse-click-close-1113.wav"),
-      clickClackSoundFx = new Audio("audio/02613.mp3");
+const audio = new Audio("audio/mixkit-mouse-click-close-1113.wav");
 
 // Изменяемые параметры
-let seconds = 0,
-    minutes = 0,
-    hours = 0,
-    milliseconds = 0,
-    counter = 1,
-    startAccess = true; // Добавил, чтобы исключить возможность запуска нескольких интервалов сразу
+let counter = 1;
+
+// Timer
+class timer {
+    constructor(name, hours, minutes, seconds, milliseconds){
+        this.name = name
+        this.hours = hours;
+        this.minutes = minutes;
+        this.seconds = seconds;
+        this.milliseconds = milliseconds;
+        this.status = true;
+    }
+
+    renewTime(){
+        this.hours = 0;
+        this.minutes = 0;
+        this.seconds = 0;
+        this.milliseconds = 0;
+        secondsContainer.textContent = "0" + 0;
+        minutesContainer.textContent = "0" + 0;
+        hoursContainer.textContent = "0" + 0;
+        millisecsContainer.textContent = "00" + 0;
+    }
+
+    riseSeconds(){
+        this.seconds++;
+        if(this.seconds <= 59){
+            if(this.seconds < 10){
+                secondsContainer.textContent = `0` + this.seconds;
+            } else {
+                secondsContainer.textContent = this.seconds;
+            }
+        } else {
+            // Если значение секунд более 59 =>
+            // Увеличиваем значение минут на 1, обновляем и выводим значение секунд
+            this.seconds = 0;
+            secondsContainer.textContent = "0" + this.seconds;
+            this.riseMinutes();
+        } 
+    }
+
+    riseMinutes(){
+        this.minutes++;
+        if(this.minutes <= 59){
+            if(this.minutes < 10){
+                minutesContainer.textContent = `0` + this.minutes;
+            } else {
+                minutesContainer.textContent = this.minutes;
+            }
+        } else {
+            // Если значение минут более 59 =>
+            // Увеличиваем значение часов на 1, обновляем и выводим значение минут
+            this.minutes = 0;
+            minutesContainer.textContent = "0" + this.minutes;
+            this.riseHours()
+        }
+    }
+
+    riseHours(){
+        this.hours++;
+        if(this.hours < 10){
+            hoursContainer.textContent = `0` + this.hours;
+        } else {
+            hoursContainer.textContent = this.hours;
+        }
+    }
+}
+
+const stopwatchTimer = new timer('Stopwatch', 0, 0, 0, 0);
 
 // Запуск секундомера при нажатии на кнопку "Start"
 startButton.addEventListener("click", () => {
-    if(startAccess){
+    if(stopwatchTimer.status){
 
-        startAccess = false; // Запрещаем повторное срабатывание кнопки "Start"
+        stopwatchTimer.status = false; // Запрещаем повторное срабатывание кнопки "Start"
 
-        clickClackSoundFx.play(); // Запуск звука работающих часов
-
-        setButton.removeAttribute("disabled") // Включаем кнопку установки промежуточных значений
+        setButton.removeAttribute("disabled") // Включаем кнопку Set
 
         // Устанавливаем начальное значение секунд, минут и часов
-        if(seconds < 10){
-            secondsContainer.textContent = `0` + seconds;
+        if(stopwatchTimer.seconds < 10){
+            secondsContainer.textContent = `0` + stopwatchTimer.seconds;
         } else {
-            secondsContainer.textContent = seconds;
+            secondsContainer.textContent = stopwatchTimer.seconds;
         }
 
-        if(minutes < 10){
-            minutesContainer.textContent = `0` + minutes;
+        if(stopwatchTimer.minutes < 10){
+            minutesContainer.textContent = `0` + stopwatchTimer.minutes;
         } else {
-            minutesContainer.textContent = minutes;
+            minutesContainer.textContent = stopwatchTimer.minutes;
         }
 
-        if(minutes < 10){
-            hoursContainer.textContent = `0` + hours;
+        if(stopwatchTimer.hours < 10){
+            hoursContainer.textContent = `0` + stopwatchTimer.hours;
         } else {
-            hoursContainer.textContent = hours;
+            hoursContainer.textContent = stopwatchTimer.hours;
         }
 
         // Устанавливаем интервал обновления миллисекунд
         // Каждые 10 миллисекунд увеличиваем значение на 10
         let millisecondsInt = setInterval(() => {
-            milliseconds = milliseconds + 10;
+            stopwatchTimer.milliseconds = stopwatchTimer.milliseconds + 10;
 
-            if(milliseconds < 999){
-                if(milliseconds < 10){
-                    millisecsContainer.textContent = "00" + milliseconds;
+            if(stopwatchTimer.milliseconds < 999){
+                if(stopwatchTimer.milliseconds < 10){
+                    millisecsContainer.textContent = "00" + stopwatchTimer.milliseconds;
                 } else {
-                    if(milliseconds < 100){
-                        millisecsContainer.textContent = "0" + milliseconds;
+                    if(stopwatchTimer.milliseconds < 100){
+                        millisecsContainer.textContent = "0" + stopwatchTimer.milliseconds;
                     } else {
-                        millisecsContainer.textContent = milliseconds;
+                        millisecsContainer.textContent = stopwatchTimer.milliseconds;
                     }
                 }
                 
@@ -75,65 +135,17 @@ startButton.addEventListener("click", () => {
             } else {
                 // Если значение миллисекунд более 999 =>
                 // Увеличиваем значение секунд на 1 и обновляем значение миллисекунд
-                riseSeconds();
-                milliseconds = 0;
+                stopwatchTimer.riseSeconds();
+                stopwatchTimer.milliseconds = 0;
             }
         },10)
-
-        // Функция увеличения значения секунд
-        const riseSeconds = () => {
-            seconds++;
-            if(seconds <= 59){
-                if(seconds < 10){
-                    secondsContainer.textContent = `0` + seconds;
-                } else {
-                    secondsContainer.textContent = seconds;
-                }
-            } else {
-                // Если значение секунд более 59 =>
-                // Увеличиваем значение минут на 1, обновляем и выводим значение секунд
-                seconds = 0;
-                secondsContainer.textContent = "0" + seconds;
-                riseMinutes();
-            } 
-        }
-
-        // Функция увеличения значения минут
-        const riseMinutes = () => {
-            minutes++;
-            if(minutes <= 59){
-                if(minutes < 10){
-                    minutesContainer.textContent = `0` + minutes;
-                } else {
-                    minutesContainer.textContent = minutes;
-                }
-            } else {
-                // Если значение минут более 59 =>
-                // Увеличиваем значение часов на 1, обновляем и выводим значение минут
-                minutes = 0;
-                minutesContainer.textContent = "0" + minutes;
-                riseHours()
-            }
-        }
-
-        // Фнукция увеличения значения часов
-        const riseHours = () => {
-            hours++;
-            if(minutes < 10){
-                hoursContainer.textContent = `0` + hours;
-            } else {
-                hoursContainer.textContent = hours;
-            }
-        }
 
         // Остановка секундомера при нажатии на кнопку "Stop"
         stopButton.addEventListener("click", function(){
 
             clearInterval(millisecondsInt);
 
-            clickClackSoundFx.pause();
-
-            startAccess = true; // Разрешаем повторное срабатывание кнопки "Start"
+            stopwatchTimer.status = true; // Разрешаем повторное срабатывание кнопки "Start"
         });
 
         // Обнуление секундомера при нажатии на кнопку "Clear"
@@ -141,25 +153,17 @@ startButton.addEventListener("click", () => {
 
             clearInterval(millisecondsInt);
 
-            clickClackSoundFx.load()
-
-            // Включаем кнопку установки промежуточных значений
+            // Выключаем кнопку Set
             setButton.setAttribute("disabled", "disabled")
 
             // Устанавливаем значение блока и переменных на 0
-            secondsContainer.textContent = "0" + 0;
-            minutesContainer.textContent = "0" + 0;
-            hoursContainer.textContent = "0" + 0;
-            millisecsContainer.textContent = "00" + 0;
-            seconds = 0;
-            minutes = 0;
-            hours = 0;
+            stopwatchTimer.renewTime();
 
             // Обнуляем промежуточные значения выведенные через кнопку "Set"
             setTimeBlock.textContent = "";
             counter = 1; // Обнуляем счетчик выведенных значений
 
-            startAccess = true; // Разрешаем повторное срабатывание кнопки "Start"
+            stopwatchTimer.status = true; // Разрешаем повторное срабатывание кнопки "Start"
         });
     }
 });
